@@ -188,6 +188,52 @@ public class GameManager : MonoBehaviour {
         case "D": dJauge += intensity; break;
         case "W": wJauge += intensity; break;
         case "A": aJauge += intensity; break;
+            case "Z": Zevent(int.Parse(codeSplitted[1]));break;
         }
+    }
+
+    void Zevent(int id)
+    {
+        switch (id) {
+            case 1: break;
+            case 2: break;
+            case 3: break;
+            case 4: break;
+            case 5: break;
+            case 6: break;
+            case 7: break;
+            case 8: break;
+            case 9: 
+
+        }
+    }
+
+    void DecreaseJauge(int intensity)
+    {
+        int maxJauge = eJauge;
+        string category = "E";
+        if (maxJauge < tJauge)
+        {
+            maxJauge = tJauge;
+            category = "T";
+        }
+        if (maxJauge < aJauge)
+        {
+            maxJauge = aJauge;
+            category = "A";
+        }
+        if (maxJauge < wJauge)
+
+        {
+            maxJauge = wJauge;
+            category = "W";
+        }
+        if (maxJauge < dJauge)
+        {
+            maxJauge = dJauge;
+            category = "D";
+        }
+
+
     }
 }
