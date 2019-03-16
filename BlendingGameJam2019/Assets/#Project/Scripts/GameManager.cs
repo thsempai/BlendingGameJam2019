@@ -19,6 +19,13 @@ public class GameManager : MonoBehaviour {
     public int tJauge = 0;
     public int aJauge = 0;
 
+    public Gauge w;
+    public Gauge d;
+    public Gauge e;
+    public Gauge t;
+    public Gauge a;
+
+
     public List<string> cardsplayed = new List<string>();
 
     public List<GameObject> avatars = new List<GameObject>();
@@ -37,6 +44,14 @@ public class GameManager : MonoBehaviour {
         DisplayWebcam.QRCodeMessage -= PlayerPlayCard;
         PhaseOut.Yes -= EndOfTurn;
 
+    }
+
+    private void Update() {
+        w.value = wJauge;
+        d.value = dJauge;
+        e.value = eJauge;
+        t.value = tJauge;
+        a.value = aJauge;
     }
 
     void Start() {
@@ -142,19 +157,19 @@ public class GameManager : MonoBehaviour {
             Debug.Log("QRCode already passed. (" + code + ")");
             lastCodeReceived = "";
         }
-        else {
-            cardsplayed.Add(code);
-            animator.SetTrigger("Yes");
-        }
 
         switch (currentPlayerState) {
         case PlayerState.NoCard:
             DoAction(code);
             if (IsEvent(code)) {
                 currentPlayerState = PlayerState.EventPlayed;
+                cardsplayed.Add(code);
+                animator.SetTrigger("Yes");
             }
             else {
                 currentPlayerState = PlayerState.OneActionPlayed;
+                cardsplayed.Add(code);
+                animator.SetTrigger("Yes");
             }
             break;
         case PlayerState.OneActionPlayed:
@@ -166,6 +181,8 @@ public class GameManager : MonoBehaviour {
             else {
                 DoAction(code);
                 currentPlayerState = PlayerState.TwoActionPlayed;
+                cardsplayed.Add(code);
+                animator.SetTrigger("Yes");
             }
             break;
 
@@ -180,7 +197,11 @@ public class GameManager : MonoBehaviour {
     private void DoAction(string code) {
         string[] codeSplitted = code.Split('_');
         string category = codeSplitted[0];
-        int intensity = int.Parse(codeSplitted[2]);
+        int intensity;
+        try {
+            intensity = int.Parse(codeSplitted[2]);
+        }
+        catch (System.Exception) { intensity = int.Parse(codeSplitted[1]); }
         Debug.Log("Action played: " + category + " - " + intensity);
         switch (category) {
         case "E": eJauge += intensity; break;
