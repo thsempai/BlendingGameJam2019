@@ -142,19 +142,19 @@ public class GameManager : MonoBehaviour {
             Debug.Log("QRCode already passed. (" + code + ")");
             lastCodeReceived = "";
         }
-        else {
-            cardsplayed.Add(code);
-            animator.SetTrigger("Yes");
-        }
 
         switch (currentPlayerState) {
         case PlayerState.NoCard:
             DoAction(code);
             if (IsEvent(code)) {
                 currentPlayerState = PlayerState.EventPlayed;
+                cardsplayed.Add(code);
+                animator.SetTrigger("Yes");
             }
             else {
                 currentPlayerState = PlayerState.OneActionPlayed;
+                cardsplayed.Add(code);
+                animator.SetTrigger("Yes");
             }
             break;
         case PlayerState.OneActionPlayed:
@@ -166,6 +166,8 @@ public class GameManager : MonoBehaviour {
             else {
                 DoAction(code);
                 currentPlayerState = PlayerState.TwoActionPlayed;
+                cardsplayed.Add(code);
+                animator.SetTrigger("Yes");
             }
             break;
 
