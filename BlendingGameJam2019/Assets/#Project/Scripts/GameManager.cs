@@ -130,8 +130,9 @@ public class GameManager : MonoBehaviour {
             return true;
         case "Z":
             try {
-                int id = int.Parse(code);
-                if (id < 1 || id > 40) return false;
+         
+                int id = int.Parse(codeSplitted[1]);
+                    if (id < 1 || id > 40) return false;
 
             }
             catch (System.Exception) { return false; };
@@ -209,6 +210,122 @@ public class GameManager : MonoBehaviour {
         case "D": dJauge += intensity; break;
         case "W": wJauge += intensity; break;
         case "A": aJauge += intensity; break;
+            case "Z": Zevent(int.Parse(codeSplitted[1]));break;
         }
     }
-}
+
+    void Zevent(int id)
+    {
+        switch (id) {
+            case 1: break;
+            case 2: break;
+            case 3: break;
+            case 4: break;
+            case 5: break;
+            case 6: IncreaseJauge(5, false); break;
+            case 7: IncreaseAllJauge(2, false); break;
+            case 8: wJauge -= 2; break;
+            case 9: aJauge -= 2; break;
+            case 10: eJauge -= 2; break;
+            case 11: tJauge -= 2; break;
+            case 12: dJauge -= 2; break;
+            case 13: dJauge -= 2;  
+                     tJauge += 1; break;
+            case 14: dJauge -= 2;
+                     aJauge += 1; break;
+            case 15: dJauge -= 2;
+                     eJauge += 1; break;
+            case 16: dJauge -= 2;
+                wJauge += 1;break;
+            case 17: wJauge -= 2;
+                dJauge += 1; break;
+            case 18: wJauge -= 2;
+                tJauge += 1; break;
+            case 19: wJauge -= 2;
+                eJauge += 1; break;
+            case 20: wJauge -= 2;
+                aJauge += 1;break;
+            case 21: eJauge -= 2;
+                tJauge += 1;break;
+            case 22: eJauge -= 2;
+                aJauge += 1;break;
+            case 23: eJauge -= 2;
+                wJauge += 1;break;
+            case 24: eJauge -= 2;
+                dJauge += 1;break;
+            case 25: aJauge -= 2;
+                wJauge += 1;break;
+            case 26: aJauge -= 2;
+                eJauge -= 1;break;
+            case 27: aJauge -= 2;
+                tJauge += 1;break;
+            case 28: aJauge -= 2;
+                dJauge += 1;break;
+            case 29: tJauge -= 2;
+                wJauge += 1;break;
+            case 30: tJauge -= 2;
+                aJauge += 1;break;
+            case 31: tJauge -= 2;
+                eJauge += 1; break;
+            case 32: tJauge -= 2;
+                dJauge += 1;break;
+
+
+
+
+
+
+
+        }
+    }
+
+    void IncreaseAllJauge(int intensity, bool increase=true)
+    {
+        int factor = 1;
+        if (!increase) factor = -1;
+
+        eJauge += intensity * factor; 
+             tJauge += intensity * factor; 
+             dJauge += intensity * factor; 
+             wJauge += intensity * factor; 
+             aJauge += intensity * factor; 
+    }
+    void IncreaseJauge(int intensity, bool increase=true)
+    {
+        int factor = 1;
+        if (!increase) factor = -1;
+        int maxJauge = eJauge;
+        string category = "E";
+        if (maxJauge < tJauge)
+        {
+            maxJauge = tJauge;
+            category = "T";
+        }
+        if (maxJauge < aJauge)
+        {
+            maxJauge = aJauge;
+            category = "A";
+        }
+        if (maxJauge < wJauge)
+
+        {
+            maxJauge = wJauge;
+            category = "W";
+        }
+        if (maxJauge < dJauge)
+        {
+            maxJauge = dJauge;
+            category = "D";
+        }
+        switch (category)
+        {
+            case "E": eJauge += intensity * factor; break;
+            case "T": tJauge += intensity * factor; break;
+            case "D": dJauge += intensity * factor; break;
+            case "W": wJauge += intensity * factor; break;
+            case "A": aJauge += intensity * factor; break;
+        }
+
+
+        }
+    }
