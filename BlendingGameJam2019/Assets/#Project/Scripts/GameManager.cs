@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviour {
             case 25: aJauge -= 2;
                 wJauge += 1;break;
             case 26: aJauge -= 2;
-                eJauge -= 1;break;
+                eJauge += 1;break;
             case 27: aJauge -= 2;
                 tJauge += 1;break;
             case 28: aJauge -= 2;
