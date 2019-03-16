@@ -269,13 +269,6 @@ public class GameManager : MonoBehaviour {
                 eJauge += 1; break;
             case 32: tJauge -= 2;
                 dJauge += 1;break;
-
-
-
-
-
-
-
         }
     }
 
