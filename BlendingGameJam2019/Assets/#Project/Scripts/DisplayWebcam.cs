@@ -4,15 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using ZXing;
 using ZXing.QrCode;
+using System;
 
 public class DisplayWebcam : MonoBehaviour
 {
 
 
-        public RawImage rawimage;
+    public RawImage rawimage;
+    public static Action<string> QRCodeMessage;
+
     WebCamTexture webcamTexture;
         void Start() {
-             webcamTexture = new WebCamTexture();
+            webcamTexture = new WebCamTexture();
             rawimage.texture = webcamTexture;
             rawimage.material.mainTexture = webcamTexture;
             webcamTexture.Play();
@@ -27,9 +30,9 @@ public class DisplayWebcam : MonoBehaviour
             // decode the current frame
             var result = barcodeReader.Decode(webcamTexture.GetPixels32(),
               webcamTexture.width, webcamTexture.height);
-            print(result);
             if (result != null) {
-                Debug.Log("DECODED TEXT FROM QR: " +result.Text);
+
+                    QRCodeMessage?.Invoke(result.Text);
             }
 
         }
