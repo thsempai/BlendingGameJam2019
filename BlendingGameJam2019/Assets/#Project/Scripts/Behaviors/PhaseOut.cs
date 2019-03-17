@@ -9,6 +9,7 @@ public class PhaseOut : StateMachineBehaviour {
     public static Action PlayerStart;
     public static Action PlayerTurnStart;
     public static Action Yes;
+    public static Action PCStart;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -33,6 +34,8 @@ public class PhaseOut : StateMachineBehaviour {
             PlayerTurnStart?.Invoke();
         else if (stateInfo.IsName("Yes"))
             Yes?.Invoke();
+        else if (stateInfo.IsName("PCPhase"))
+            PCStart?.Invoke();
 
     }
 

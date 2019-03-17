@@ -29,11 +29,14 @@ public class GameManager : MonoBehaviour {
     public List<string> cardsplayed = new List<string>();
 
     public List<GameObject> avatars = new List<GameObject>();
+    public GameObject buttonPC;
+
 
     private void OnEnable() {
         PhaseOut.PlayerStart += PhasePlayersStart;
         PhaseOut.PlayerTurnStart += PlayerPlays;
         DisplayWebcam.QRCodeMessage += PlayerPlayCard;
+        PhaseOut.PCStart += PCPlays;
 
         PhaseOut.Yes += EndOfTurn;
     }
@@ -43,6 +46,7 @@ public class GameManager : MonoBehaviour {
         PhaseOut.PlayerTurnStart -= PlayerPlays;
         DisplayWebcam.QRCodeMessage -= PlayerPlayCard;
         PhaseOut.Yes -= EndOfTurn;
+        PhaseOut.PCStart -= PCPlays;
 
     }
 
@@ -62,12 +66,13 @@ public class GameManager : MonoBehaviour {
         animator.SetTrigger("PlayerPhase");
     }
 
-    void PhasePlayersStart() {
+    public void PhasePlayersStart() {
         currentPlayer = 0;
         Debug.Log("Phase Player is Started");
         NextPlayer();
         PlayerIntro();
     }
+
 
     private void EndOfTurn() {
         if (currentPlayerState != PlayerState.EventPlayed && currentPlayerState != PlayerState.TwoActionPlayed) return;
@@ -79,8 +84,11 @@ public class GameManager : MonoBehaviour {
         currentPlayer++;
         currentPlayerState = PlayerState.NoCard;
         lastCodeReceived = "";
+
         if (currentPlayer > playersCount) {
-            currentPlayer = 1;
+            currentPlayer = 0;
+            PhasePC();
+            return 0;
         }
 
         while (playerSkip.Contains(currentPlayer)) {
@@ -91,7 +99,16 @@ public class GameManager : MonoBehaviour {
             }
         }
         Debug.Log("Player " + currentPlayer.ToString() + " plays.");
+        buttonPC.SetActive(false);
         return currentPlayer;
+    }
+
+    private void PhasePC() {
+        animator.SetTrigger("PCPhase");
+    }
+
+    private void PCPlays() {
+        buttonPC.SetActive(true);
     }
 
     private void PlayerIntro() {
@@ -137,7 +154,6 @@ public class GameManager : MonoBehaviour {
             }
             catch (System.Exception) { return false; };
             return true;
-
         }
         return false;
     }
