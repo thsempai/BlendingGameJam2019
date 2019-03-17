@@ -1,16 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PcEvent {
-    public PcEvent(int id, string text, string title) {
+    public PcEvent(int id, string title, string text) {
         this.id = id;
         this.title = title;
         this.text = text;
     }
-    int id;
-    string text;
-    string title;
+    public int id;
+    public string text;
+    public string title;
 }
 
 public class GameManager : MonoBehaviour {
@@ -35,6 +36,9 @@ public class GameManager : MonoBehaviour {
     public Gauge e;
     public Gauge t;
     public Gauge a;
+
+    public Dictionary<int, Dictionary<string, int>> memo= new Dictionary<int, Dictionary<string, int>>();
+
 
     Dictionary<string, List<PcEvent>> pcEvents = new Dictionary<string, List<PcEvent>>();
     List<PcEvent> lpet = new List<PcEvent>() {
@@ -64,14 +68,17 @@ public class GameManager : MonoBehaviour {
     };
     List<PcEvent> lpep = new List<PcEvent>() {
         new PcEvent(1, "Tous pour un", "Toutes les jauges diminuent de 2 points"),
-        new PcEvent(2, "Shake it!", "le joueur avec le plus de point échange sa main avec celui qui en a le moins"),
-        new PcEvent(3, "Qui fait le malin...", "le joueur passe son tour"),
+        new PcEvent(2, "Shake it!", "le joueur avec le plus de jetons échange sa main avec celui qui en a le moins. En cas d'égalité parfaite, ne faite rien."),
+        new PcEvent(3, "Qui fait le malin...", "le joueur NAME passe son tour"),
     };
     public List<string> cardsplayed = new List<string>();
 
     public List<GameObject> avatars = new List<GameObject>();
     public GameObject buttonPC;
     public GameObject skipButton;
+
+    public Text pcText;
+    public Text pcTitle;
 
 
     private void OnEnable() {
@@ -102,6 +109,14 @@ public class GameManager : MonoBehaviour {
 
     void Start() {
         playersCount = PlayerPrefs.GetInt("players_number");
+        for(int index=1; index <= playersCount; index++) {
+            memo[index] = new Dictionary<string, int>();
+            memo[index].Add("W", 0);
+            memo[index].Add("T", 0);
+            memo[index].Add("D", 0);
+            memo[index].Add("E", 0);
+            memo[index].Add("A", 0);
+        }
         PhasePlayerIntro();
         pcEvents.Add("W", lpew);
         pcEvents.Add("T", lpet);
@@ -116,6 +131,8 @@ public class GameManager : MonoBehaviour {
     }
 
     public void PhasePlayersStart() {
+        pcTitle.gameObject.SetActive(false);
+        pcText.gameObject.SetActive(false);
         currentPlayer = 0;
         Debug.Log("Phase Player is Started");
         NextPlayer();
@@ -135,6 +152,11 @@ public class GameManager : MonoBehaviour {
     }
 
     private int NextPlayer() {
+        string categrory;
+        if (GiveMax(out categrory)>= 20) {
+            PlayerPrefs.SetString("win_category", categrory);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+        }
         currentPlayer++;
         currentPlayerState = PlayerState.NoCard;
         lastCodeReceived = "";
@@ -160,12 +182,77 @@ public class GameManager : MonoBehaviour {
     }
 
     private void PhasePC() {
+
         animator.SetTrigger("PCPhase");
     }
 
     private void PCPlays() {
+        pcTitle.gameObject.SetActive(true);
+        pcText.gameObject.SetActive(true);
         buttonPC.SetActive(true);
+
+        string category;
+        int maxValue = GiveMax(out category);
+        int index = 0;
+        if (maxValue > 9) {
+            index = 1;
+        }
+        else if(maxValue > 14) {
+            index = 2;
+        }
+
+        int rnd = Random.Range(1, 4);
+        if (rnd == 1) { category = "P";}
+
+        PcEvent pcEvent = pcEvents[category][index];
+
+        string title = pcEvent.title;
+        string text = pcEvent.text;
+        int id = pcEvent.id;
+        DoEventPc(category, id);
+
+        if(id==3 && category == "P") {
+            playerSkip.Add(WorstPlayer(category));
+            text.Replace("NAME", WorstPlayer(category).ToString());
+        }
+        pcText.text = text;
+        pcTitle.text = title;
+        
     }
+
+    private int  WorstPlayer(string category) {
+        int maxValue = -1;
+        int worstplayer = -1;
+        foreach (KeyValuePair<int, Dictionary<string, int>> player in memo) {
+            if(player.Value[category] > maxValue) {
+                maxValue = player.Value[category];
+                worstplayer = player.Key;
+            }
+        }
+        return worstplayer;
+    }
+
+    private int GiveMax(out string category) {
+        int maxJauge = eJauge;
+        category = "E";
+        if (maxJauge < tJauge) {
+            maxJauge = tJauge;
+            category = "T";
+        }
+        if (maxJauge < aJauge) {
+            maxJauge = aJauge;
+            category = "A";
+        }
+        if (maxJauge < wJauge) {
+            maxJauge = wJauge;
+            category = "W";
+        }
+        if (maxJauge < dJauge) {
+            maxJauge = dJauge;
+            category = "D";
+        }
+        return maxJauge;
+    } 
 
     private void PlayerIntro() {
         animator.SetTrigger("PlayerIntro");
@@ -231,6 +318,7 @@ public class GameManager : MonoBehaviour {
             animator.SetTrigger("No");
             Debug.Log("QRCode already passed. (" + code + ")");
             lastCodeReceived = "";
+            return;
         }
 
         switch (currentPlayerState) {
@@ -286,6 +374,9 @@ public class GameManager : MonoBehaviour {
         case "W": wJauge += intensity; break;
         case "A": aJauge += intensity; break;
             case "Z": Zevent(int.Parse(codeSplitted[1]));break;
+        }
+        if (!IsEvent(code)) {
+            memo[currentPlayer][category]++;
         }
     }
 

@@ -36,7 +36,7 @@ public class DisplayWebcam : MonoBehaviour
             }
 
         }
-        catch (System.Exception ex) { Debug.LogWarning(ex.Message); }
+        catch (System.Exception ex) {  Debug.LogWarning(ex.Message); }
     }
 }
 
