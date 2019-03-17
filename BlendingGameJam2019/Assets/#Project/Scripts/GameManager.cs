@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour {
 
     public List<GameObject> avatars = new List<GameObject>();
     public GameObject buttonPC;
+    public GameObject skipButton;
 
 
     private void OnEnable() {
@@ -123,6 +124,7 @@ public class GameManager : MonoBehaviour {
 
     private void EndOfTurn() {
         if (currentPlayerState != PlayerState.EventPlayed && currentPlayerState != PlayerState.TwoActionPlayed) return;
+        skipButton.SetActive(false);
         NextPlayer();
         PlayerIntro();
     }
@@ -165,6 +167,8 @@ public class GameManager : MonoBehaviour {
 
     private void PlayerPlays() {
         Debug.Log("Waiting for player " + currentPlayer.ToString() + " cards.");
+        if(currentPlayer>0)
+        skipButton.SetActive(true);
     }
 
     private void ActiveAvatar() {
@@ -234,6 +238,7 @@ public class GameManager : MonoBehaviour {
                 currentPlayerState = PlayerState.OneActionPlayed;
                 cardsplayed.Add(code);
                 animator.SetTrigger("Yes");
+                skipButton.SetActive(false);
             }
             break;
         case PlayerState.OneActionPlayed:
