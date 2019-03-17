@@ -2,6 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class PcEvent {
+    public PcEvent(int id, string text, string title) {
+        this.id = id;
+        this.title = title;
+        this.text = text;
+    }
+    int id;
+    string text;
+    string title;
+}
+
 public class GameManager : MonoBehaviour {
     public enum PlayerState { NoCard, OneActionPlayed, TwoActionPlayed, EventPlayed }
 
@@ -24,19 +35,6 @@ public class GameManager : MonoBehaviour {
     public Gauge e;
     public Gauge t;
     public Gauge a;
-
-    public class PcEvent
-    {
-        PcEvent(int id, string text, string title)
-        {
-            this.id = id;
-            this.title = title;
-            this.text = text;
-        }
-        int id;
-        string text;
-        string title;
-    }
 
     Dictionary<string, List<PcEvent>> pcEvents = new Dictionary<string, List<PcEvent>>();
     List<PcEvent> lpet = new List<PcEvent>() {
@@ -405,10 +403,10 @@ void DoEventPc(string category, int id)
         {
             if (id == 1)
             {
-                DJauge -= 1;
+                dJauge -= 1;
             }
-            else if (id == 2) { DJauge -= 3; }
-            else { DJauge -= 5; }
+            else if (id == 2) { dJauge -= 3; }
+            else { dJauge -= 5; }
         }
 
         if (category == "E")
