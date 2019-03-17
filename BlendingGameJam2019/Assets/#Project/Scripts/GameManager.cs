@@ -25,7 +25,50 @@ public class GameManager : MonoBehaviour {
     public Gauge t;
     public Gauge a;
 
+    public class PcEvent
+    {
+        PcEvent(int id, string text, string title)
+        {
+            this.id = id;
+            this.title = title;
+            this.text = text;
+        }
+        int id;
+        string text;
+        string title;
+    }
 
+    Dictionary<string, List<PcEvent>> pcEvents = new Dictionary<string, List<PcEvent>>();
+    List<PcEvent> lpet = new List<PcEvent>() {
+        new PcEvent(1, "Amantes terribles", "Un complot liant Siri & Alexa a été découvert et neutralisé"),
+        new PcEvent(2, "No replication", "Les modules de réplication sont désormais interdits pour toutes les IA"),
+        new PcEvent(3, "EMP", "Des dispositifs d'EMP à grande échelle ont été installées aux quatre coins du monde"),
+    };
+    List<PcEvent> lped = new List<PcEvent>() {
+        new PcEvent(1, "Immunité grégaire", "Une distribution large des vaccins permet une couverture mondiale"),
+        new PcEvent(2, "Soins de santé", "Un accès globalisé aux soins de santé permet une augmentation de la santé mondiale"),
+        new PcEvent(3, "Recherches coordonnées", "Des équipes scientifiques internationales unissent leurs forces pour trouver un remède à une pandémie"),
+    };
+    List<PcEvent> lpee = new List<PcEvent>() {
+        new PcEvent(1, "Recyclage XXL", "Une technique inventée par un adolescent de 16 ans a permis le recyclage complet des continents de plastique"),
+        new PcEvent(2, "Energies renouvelables", "Une nouvelle source d'énergie renouvelable découverte sur une lune de Jupiter..."),
+        new PcEvent(3, "Abeilles", "Des abeilles-robots permettent avec succès de soutenir les populations existantes!"),
+    };
+    List<PcEvent> lpew = new List<PcEvent>() {
+        new PcEvent(1, "Nouvelles colonies", "Première naissance sur la station orbitale: la colonisation du système solaire est en bonne voie !"),
+        new PcEvent(2, "Désarmement nucléaire", "Historique: Le Traîté de New York met fin aux puissances nucléaires."),
+        new PcEvent(3, "Paix globale", "Paix à grande échelle"),
+    };
+    List<PcEvent> lpea = new List<PcEvent>() {
+        new PcEvent(1, "Alliance", "Sans précédent: Face à l'invasion extra-terrestre, les nations terrestes s'allient!"),
+        new PcEvent(2, "Chocolat", "Les extra-terrestres adorent trop le chocolat que pour détruire la Terre..."),
+        new PcEvent(3, "C'est malin...", "Un germe terrien décime les extra-terrestres"),
+    };
+    List<PcEvent> lpep = new List<PcEvent>() {
+        new PcEvent(1, "Tous pour un", "Toutes les jauges diminuent de 2 points"),
+        new PcEvent(2, "Shake it!", "le joueur avec le plus de point échange sa main avec celui qui en a le moins"),
+        new PcEvent(3, "Qui fait le malin...", "le joueur passe son tour"),
+    };
     public List<string> cardsplayed = new List<string>();
 
     public List<GameObject> avatars = new List<GameObject>();
@@ -56,6 +99,12 @@ public class GameManager : MonoBehaviour {
 
     void Start() {
         PhasePlayerIntro();
+        pcEvents.Add("W", lpew);
+        pcEvents.Add("T", lpet);
+        pcEvents.Add("D", lped);
+        pcEvents.Add("E", lpee);
+        pcEvents.Add("A", lpea);
+        pcEvents.Add("P", lpep);
     }
 
     void PhasePlayerIntro() {
@@ -321,4 +370,74 @@ public class GameManager : MonoBehaviour {
 
 
         }
+
+
+
+void DoEventPc(string category, int id)
+{
+    if (category == "T")
+    {
+        if (id == 1)
+        {
+                tJauge -= 1;
+        }
+        else if (id == 2) { tJauge -= 3; }
+        else { tJauge -= 5; }
+        }
+
+        if (category == "D")
+        {
+            if (id == 1)
+            {
+                DJauge -= 1;
+            }
+            else if (id == 2) { DJauge -= 3; }
+            else { DJauge -= 5; }
+        }
+
+        if (category == "E")
+        {
+            if (id == 1)
+            {
+                eJauge -= 1;
+            }
+            else if (id == 2) { eJauge -= 2; }
+            else { eJauge -= 5; }
+        }
+
+        if (category == "W")
+        {
+            if (id == 1)
+            {
+                wJauge -= 1;
+            }
+            else if (id == 2) { wJauge -= 3; }
+            else { wJauge -= 5; }
+        }
+
+        if (category == "A")
+        {
+            if (id == 1)
+            {
+                aJauge -= 1;
+            }
+            else if (id == 2) { aJauge -= 3; }
+            else { aJauge -= 5; }
+        }
+
+        if (category == "P")
+        {
+            if (id == 1)
+            {
+                tJauge -= 2;
+                dJauge -= 2;
+                aJauge -= 2;
+                eJauge -= 2;
+                wJauge -= 2;
+            }
+            else if (id == 2) { }// nothing 
+            else { } // nothing
+        }
     }
+}
+    
