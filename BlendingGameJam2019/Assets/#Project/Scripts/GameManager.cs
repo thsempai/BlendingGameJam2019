@@ -14,7 +14,7 @@ public class PcEvent {
 }
 
 public class GameManager : MonoBehaviour {
-    public enum PlayerState { NoCard, OneActionPlayed, TwoActionPlayed, EventPlayed }
+    public enum PlayerState { NoCard, OneActionPlayed, TwoActionPlayed, EventPlayed, Skip }
 
     public PlayerState currentPlayerState;
     public Animator animator;
@@ -101,6 +101,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start() {
+        playersCount = PlayerPrefs.GetInt("players_number");
         PhasePlayerIntro();
         pcEvents.Add("W", lpew);
         pcEvents.Add("T", lpet);
@@ -121,9 +122,13 @@ public class GameManager : MonoBehaviour {
         PlayerIntro();
     }
 
+    public void SkipTurn() {
+        currentPlayerState = PlayerState.Skip;
+        EndOfTurn();
+    }
 
     private void EndOfTurn() {
-        if (currentPlayerState != PlayerState.EventPlayed && currentPlayerState != PlayerState.TwoActionPlayed) return;
+        if (currentPlayerState != PlayerState.EventPlayed && currentPlayerState != PlayerState.TwoActionPlayed && currentPlayerState != PlayerState.Skip) return;
         skipButton.SetActive(false);
         NextPlayer();
         PlayerIntro();
@@ -144,7 +149,9 @@ public class GameManager : MonoBehaviour {
             playerSkip.Remove(currentPlayer);
             currentPlayer++;
             if (currentPlayer > playersCount) {
-                currentPlayer = 1;
+                currentPlayer = 0;
+                PhasePC();
+                return 0;
             }
         }
         Debug.Log("Player " + currentPlayer.ToString() + " plays.");
