@@ -17,6 +17,11 @@ public class PcEvent {
 public class GameManager : MonoBehaviour {
     public enum PlayerState { NoCard, OneActionPlayed, TwoActionPlayed, EventPlayed, Skip }
 
+    static readonly string[] colorPlayers = { "50c2db", "d5b0d2", "d8854f", "5e007b" };
+    static readonly Dictionary<string, string> colorGauges = new Dictionary<string, string>() {
+        { "W", "FFFD00" }, { "E", "7D4100" }, {"A", "41C311" }, {"D", "FF0014"}, {"T", "106CAD"}, {"Z", "E1E1E1"} };
+    static readonly Dictionary<string, string> nameGauges = new Dictionary<string, string>() {
+        { "W", "Guerre" }, { "E", "Ecosystème" }, {"A", "Extra-terrestre" }, {"D", "Maladie"}, {"T", "Technologie"}, {"Z", "Evenement"} };
     public PlayerState currentPlayerState;
     public Animator animator;
     public int currentPlayer;
@@ -36,6 +41,8 @@ public class GameManager : MonoBehaviour {
     public Gauge e;
     public Gauge t;
     public Gauge a;
+
+    public Text logs;
 
     public Dictionary<int, Dictionary<string, int>> memo= new Dictionary<int, Dictionary<string, int>>();
 
@@ -153,7 +160,7 @@ public class GameManager : MonoBehaviour {
 
     private int NextPlayer() {
         string categrory;
-        if (GiveMax(out categrory)>= 20) {
+        if (GiveMax(out categrory)>= 15) {
             PlayerPrefs.SetString("win_category", categrory);
             UnityEngine.SceneManagement.SceneManager.LoadScene(2);
         }
@@ -194,10 +201,10 @@ public class GameManager : MonoBehaviour {
         string category;
         int maxValue = GiveMax(out category);
         int index = 0;
-        if (maxValue > 9) {
+        if (maxValue > 7) {
             index = 1;
         }
-        else if(maxValue > 14) {
+        else if(maxValue > 11) {
             index = 2;
         }
 
@@ -336,6 +343,7 @@ public class GameManager : MonoBehaviour {
                 skipButton.SetActive(false);
             }
             break;
+
         case PlayerState.OneActionPlayed:
             if (IsEvent(code)) {
                 animator.SetTrigger("No");
@@ -367,6 +375,15 @@ public class GameManager : MonoBehaviour {
         }
         catch (System.Exception) { intensity = int.Parse(codeSplitted[1]); }
         Debug.Log("Action played: " + category + " - " + intensity);
+
+        string textLog = "<color=#" + colorPlayers[currentPlayer-1]+"> Joueur " + currentPlayer.ToString() + ": </color>";
+        textLog += "<color=#" + colorGauges[category] +">" +  nameGauges[category] + " ";
+        if(category != "Z") {
+            textLog += intensity.ToString("+0;-#");
+        }
+        textLog += "</color> ";
+        logs.text = textLog + "\n" + logs.text;
+
         switch (category) {
         case "E": eJauge += intensity; break;
         case "T": tJauge += intensity; break;
