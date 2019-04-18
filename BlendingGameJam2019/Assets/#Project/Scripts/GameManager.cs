@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour {
     static readonly Dictionary<string, string> colorGauges = new Dictionary<string, string>() {
         { "W", "FFFD00" }, { "E", "7D4100" }, {"A", "41C311" }, {"D", "FF0014"}, {"T", "106CAD"}, {"Z", "E1E1E1"} };
     static readonly Dictionary<string, string> nameGauges = new Dictionary<string, string>() {
-        { "W", "Guerre" }, { "E", "Ecosystème" }, {"A", "Extra-terrestre" }, {"D", "Maladie"}, {"T", "Technologie"}, {"Z", "Evenement"} };
+        { "W", "War" }, { "E", "Ecosystem" }, {"A", "Alien" }, {"D", "Disease"}, {"T", "Technology"}, {"Z", "Event"} };
     public PlayerState currentPlayerState;
     public Animator animator;
     public int currentPlayer;
@@ -376,7 +376,7 @@ public class GameManager : MonoBehaviour {
         catch (System.Exception) { intensity = int.Parse(codeSplitted[1]); }
         Debug.Log("Action played: " + category + " - " + intensity);
 
-        string textLog = "<color=#" + colorPlayers[currentPlayer-1]+"> Joueur " + currentPlayer.ToString() + ": </color>";
+        string textLog = "<color=#" + colorPlayers[currentPlayer-1]+"> Player " + currentPlayer.ToString() + ": </color>";
         textLog += "<color=#" + colorGauges[category] +">" +  nameGauges[category] + " ";
         if(category != "Z") {
             textLog += intensity.ToString("+0;-#");
