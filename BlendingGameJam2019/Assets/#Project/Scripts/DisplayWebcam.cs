@@ -25,18 +25,21 @@ public class DisplayWebcam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ZXing.Result result = null;
         try {
             IBarcodeReader barcodeReader = new BarcodeReader();
             // decode the current frame
-            var result = barcodeReader.Decode(webcamTexture.GetPixels32(),
+            result = barcodeReader.Decode(webcamTexture.GetPixels32(),
               webcamTexture.width, webcamTexture.height);
-            if (result != null) {
+        }
+        catch (System.Exception ex) { Debug.LogWarning(ex.Message); }
+
+        if (result != null) {
 
                     QRCodeMessage?.Invoke(result.Text);
             }
 
-        }
-        catch (System.Exception ex) {  Debug.LogWarning(ex.Message); }
+
     }
 }
 
