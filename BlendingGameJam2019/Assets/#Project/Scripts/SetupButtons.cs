@@ -5,9 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class SetupButtons : MonoBehaviour
 {
+    public AudioSource sound;
+    private bool ok = false;
+    public void Update() {
+        if (ok && !sound.isPlaying) {
+
+            SceneManager.LoadScene(1);
+        }
+    }
+
     public void SetupPlayer(int number)
     {
-        PlayerPrefs.SetInt("players_number", number);
-        SceneManager.LoadScene(1);
-    }
+    sound.Play();
+    PlayerPrefs.SetInt("players_number", number);
+        ok = true;
+}
 }
